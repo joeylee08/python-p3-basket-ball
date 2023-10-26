@@ -182,3 +182,65 @@ def game_dict():
             ]
         }
     }
+
+def all_players():
+    players = {}
+    for team_key in game_dict():
+        for player_dict in game_dict()[team_key]['players']:
+            player_stats = {}
+            for key in player_dict:
+                if key == 'name':
+                    continue
+                player_stats[key] = player_dict[key]
+            players[player_dict['name']] = player_stats
+    return players
+
+def num_points_per_game(name):
+    return all_players()[name]['points_per_game']
+
+def player_age(name):
+    return all_players()[name]['age']
+
+def team_colors(name):
+    for team in game_dict():
+        if game_dict()[team]['team_name'] == name:
+            return game_dict()[team]['colors']
+        
+def team_names():
+    result = []
+    for team in game_dict():
+        result.append(game_dict()[team]['team_name'])
+    return result
+
+def player_numbers(name):
+    for team in game_dict():
+        if game_dict()[team]['team_name'] == name:
+            return [player['number'] for player in game_dict()[team]['players']]
+
+def player_stats(name):
+    for player in all_players():
+        if player == name:
+            copy = all_players()[player]
+            copy['name'] = name
+            return copy
+
+def average_rebounds_by_shoe_brand():
+    rebounds_by_brand = {}
+
+    for player in all_players():
+        if all_players()[player]['shoe_brand'] not in rebounds_by_brand:
+            rebounds_by_brand[all_players()[player]['shoe_brand']] = []
+            rebounds_by_brand[all_players()[player]['shoe_brand']].append(all_players()[player]['rebounds_per_game'])
+        else:
+            rebounds_by_brand[all_players()[player]['shoe_brand']].append(all_players()[player]['rebounds_per_game'])
+    
+    
+    for key in rebounds_by_brand:
+        rebounds_by_brand[key] = "{:.2f}".format(sum(rebounds_by_brand[key]) / len(rebounds_by_brand[key]))
+        print(f"{key}: {rebounds_by_brand[key]}")
+    
+    # print(rebounds_by_brand)
+
+average_rebounds_by_shoe_brand()
+
+# python lib/basket_ball.py
